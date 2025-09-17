@@ -1,4 +1,4 @@
-# Design Patterns escolhidos:
+# Chosen Design Patterns:
 
 # 1. Builder
 
@@ -13,7 +13,11 @@
 - This is a special object that converts the interface of one object so that another object can understand it.
 - An adapter wraps one of the objects to hide the complexity of conversion happening behind the scenes. The wrapped object isn’t even aware of the adapter. For example, you can wrap an object that operates in meters and kilometers with an adapter that converts all of the data to imperial units such as feet and miles.
 
-# 4. Bridge
+# 4. Command
+
+- The Command pattern suggests that GUI objects shouldn’t send these requests directly. Instead, you should extract all of the request details, such as the object being called, the name of the method and the list of arguments into a separate command class with a single method that triggers this request.
+
+- Command objects serve as links between various GUI and business logic objects. From now on, the GUI object doesn’t need to know what business logic object will receive the request and how it’ll be processed. The GUI object just triggers the command, which handles all the details.
 
 # 5. Observer
 

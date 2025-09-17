@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { PdfReportBuilder } from "./_lib/builder/PdfReportBuilder";
-import { ConsoleReportObserver } from "./_lib/observer/ConsoleReportObserver";
 import { Facade } from "./_lib/facade/Facade";
 import { PayPalAdapter, PayPalSDK } from "./_lib/adapter/PayPalAdapter";
 import { PicPayAdapter, PicPaySDK } from "./_lib/adapter/PicPayAdapter";
+import { GerarRelatorioCommand } from "./_lib/command/GerarRelatorioCommand";
+import { ReportInvoker } from "./_lib/command/ReportInvoker";
 
 export default function Home() {
   // Implementação facade + adapter
@@ -29,23 +29,12 @@ export default function Home() {
   };
 
   // Implementação builder + observer
-  const gerarRelatorio = async () => {
-    const builder = new PdfReportBuilder();
-    await builder.init();
+  const handleRelatorio = async () => {
+    const invoker = new ReportInvoker(
+      new GerarRelatorioCommand(formaPagamento, resultado)
+    );
 
-    const observer = new ConsoleReportObserver();
-    builder.subscribe(observer);
-
-    builder.setTitle("Relatório de Compras");
-    builder.setSection(`Seção 1: Forma de pagamento: ${formaPagamento}`);
-    builder.setSection(`Seção 2: Preço R$11.249`);
-    builder.setSection(`Seção 3: ${resultado}`);
-    builder.setFooter("© 2025 Minha Loja");
-
-    builder.build();
-
-    // gerar bytes do PDF
-    const pdfBytes = await builder.generatePdfBytes();
+    const pdfBytes = await invoker.execute();
 
     // criar blob e link para download
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
@@ -112,7 +101,7 @@ export default function Home() {
       <button
         id="comprar-btn"
         className="buy-btn"
-        onClick={gerarRelatorio}
+        onClick={handleRelatorio}
         disabled={!comprou}
       >
         📄 Gerar Relatório
